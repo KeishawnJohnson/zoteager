@@ -7,29 +7,29 @@ import { Col, Row, Container } from "../components/Grid";
 import { List, ListItem } from "../components/List";
 import { Input, TextArea, FormBtn } from "../components/Form";
 
-class Books extends Component {
+class Movies extends Component {
   state = {
-    books: [],
+    movies: [],
     title: "",
-    author: "",
+    director: "",
     synopsis: ""
   };
 
   componentDidMount() {
-    this.loadBooks();
+    this.loadMovies();
   }
 
-  loadBooks = () => {
-    API.getBooks()
+  loadMovies = () => {
+    API.getMovies()
       .then(res =>
-        this.setState({ books: res.data, title: "", author: "", synopsis: "" })
+        this.setState({ movies: res.data, title: "", director: "", synopsis: "" })
       )
       .catch(err => console.log(err));
   };
 
-  deleteBook = id => {
-    API.deleteBook(id)
-      .then(res => this.loadBooks())
+  deleteMovie = id => {
+    API.deleteMovie(id)
+      .then(res => this.loadMovies())
       .catch(err => console.log(err));
   };
 
@@ -42,13 +42,13 @@ class Books extends Component {
 
   handleFormSubmit = event => {
     event.preventDefault();
-    if (this.state.title && this.state.author) {
-      API.saveBook({
+    if (this.state.title && this.state.director) {
+      API.saveMovie({
         title: this.state.title,
-        author: this.state.author,
+        director: this.state.director,
         synopsis: this.state.synopsis
       })
-        .then(res => this.loadBooks())
+        .then(res => this.loadMovies())
         .catch(err => console.log(err));
     }
   };
@@ -59,7 +59,7 @@ class Books extends Component {
         <Row>
           <Col size="md-6">
             <Jumbotron>
-              <h1>What Books Should I Read?</h1>
+              <h1>What Movies Should I Read?</h1>
             </Jumbotron>
             <form>
               <Input
@@ -69,10 +69,10 @@ class Books extends Component {
                 placeholder="Title (required)"
               />
               <Input
-                value={this.state.author}
+                value={this.state.director}
                 onChange={this.handleInputChange}
-                name="author"
-                placeholder="Author (required)"
+                name="director"
+                placeholder="Director (required)"
               />
               <TextArea
                 value={this.state.synopsis}
@@ -81,27 +81,27 @@ class Books extends Component {
                 placeholder="Synopsis (Optional)"
               />
               <FormBtn
-                disabled={!(this.state.author && this.state.title)}
+                disabled={!(this.state.director && this.state.title)}
                 onClick={this.handleFormSubmit}
               >
-                Submit Book
+                Submit Movie
               </FormBtn>
             </form>
           </Col>
           <Col size="md-6 sm-12">
             <Jumbotron>
-              <h1>Books On My List</h1>
+              <h1>Movies On My List</h1>
             </Jumbotron>
-            {this.state.books.length ? (
+            {this.state.movies.length ? (
               <List>
-                {this.state.books.map(book => (
-                  <ListItem key={book._id}>
-                    <Link to={"/books/" + book._id}>
+                {this.state.movies.map(movie => (
+                  <ListItem key={movie._id}>
+                    <Link to={"/movies/" + movie._id}>
                       <strong>
-                        {book.title} by {book.author}
+                        {movie.title} by {movie.director}
                       </strong>
                     </Link>
-                    <DeleteBtn onClick={() => this.deleteBook(book._id)} />
+                    <DeleteBtn onClick={() => this.deleteMovie(movie._id)} />
                   </ListItem>
                 ))}
               </List>
@@ -115,4 +115,4 @@ class Books extends Component {
   }
 }
 
-export default Books;
+export default Movies;
